@@ -1,23 +1,24 @@
 [tool.poetry]
-name = "{{cookiecutter.package_name}}"
+name = "{{cookiecutter.project_app}}"
 version = "0.1.0"
-description = "Liaison Service"
-authors = ["{{cookiecutter.author_name}}<{{cookiecutter.author_email}}>"]
-license = "MIT"
+description = "{{cookiecutter.project_name}}"
+authors = ["{{cookiecutter.author_name}} <{{cookiecutter.author_email}}>"]
+license = "{{cookiecutter.license}}"
 readme = "README.md"
 
-homepage = "https://github.ncsu.edu/SAT/{{cookiecutter.repo_name}}"
-repository = "https://github.ncsu.edu/SAT/{{cookiecutter.repo_name}}"
-documentation = "https://github.ncsu.edu/SAT/{{cookiecutter.repo_name}}/gh-pages"
+homepage = "https://github.ncsu.edu/SAT/{{cookiecutter.project_repo}}"
+repository = "https://github.ncsu.edu/SAT/{{cookiecutter.project_repo}}"
+documentation = "https://github.ncsu.edu/SAT/{{cookiecutter.project_repo}}/gh-pages"
 classifiers = [
     "{{cookiecutter.development_status}}",
 ]
 
 [tool.poetry.urls]
-Changelog = "https://github.ncsu.edu/SAT/{{cookiecutter.repo_name}}/releases"
+Changelog = "https://github.ncsu.edu/SAT/{{cookiecutter.project_repo}}/releases"
 
 [tool.poetry.dependencies]
 python = "^3.11"
+django = "^4.2"
 
 
 [tool.poetry.dev-dependencies]
@@ -37,9 +38,6 @@ pytest = ">=6.2.5"
 pyupgrade = ">=2.29.1"
 safety = ">=1.10.3"
 typeguard = ">=2.13.3"
-
-[tool.poetry.scripts]
-liaison-service = "{{cookiecutter.package_name}}.__main__:main"
 
 [[tool.poetry.source]]
 name = "sat-pypi"

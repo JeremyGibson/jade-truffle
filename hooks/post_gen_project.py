@@ -79,12 +79,6 @@ def setup_node():
     for dep in base_deps:
         subprocess.run(['npm', 'install', '--silent', dep])
 
-
-def setup_python():
-    print("Setting up Python")
-    subprocess.run(['make', 'update_requirements'])
-
-
 def setup_local_py():
     print("Setting up local.py")
     Path("./{{cookiecutter.project_app}}/settings/local.example.py")\
@@ -96,7 +90,6 @@ def main():
     clean_project()
     setup_local_py()
     setup_node()
-    setup_python()
 
 
 if __name__ == "__main__":
