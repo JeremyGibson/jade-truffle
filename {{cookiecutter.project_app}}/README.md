@@ -167,7 +167,7 @@ services.
 First add the following line to your `.env` file:
 
 ```sh
-({{ cookiecutter.project_app }})$ echo "DATABASE_URL=postgres://postgres@127.0.0.1:{{ cookiecutter.postgres_port }}/{{ cookiecutter.project_app }}" >> .env
+({{ cookiecutter.project_app }})$ echo "DATABASE_URL=postgres://postgres@127.0.0.1:{{ cookiecutter.local_postgres_port }}/{{ cookiecutter.project_app }}" >> .env
 ```
 
 The `docker-compose.yml` sets up environment variables in a file, ``.postgres``.
@@ -183,7 +183,7 @@ following shell environment variables:
 
 ```sh
     export PGHOST=127.0.0.1
-    export PGPORT={{ cookiecutter.postgres_port }}
+    export PGPORT={{ cookiecutter.local_postgres_port }}
     export PGUSER=postgres
     export PGDATABASE={{ cookiecutter.project_app }}
 ```

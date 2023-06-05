@@ -14,7 +14,7 @@
   "ci_cd": "actions",
   "cloud_provider": "gcp",
   "postgres_version": "14",
-  "postgres_port": "5432",
+  "local_postgres_port": "5432",
   "include_accessibility_tests": ["yes", "no"],
   "project_domain_name": "ehps.ncsu.edu",
   "copyright_year": "{% now 'utc', '%Y' %}",
