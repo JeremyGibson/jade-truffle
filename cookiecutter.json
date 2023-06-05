@@ -15,8 +15,7 @@
   "cloud_provider": "gcp",
   "postgres_version": "14",
   "local_postgres_port": "5432",
-  "include_accessibility_tests": ["yes", "no"],
-  "project_domain_name": "ehps.ncsu.edu",
+  "project_domain_name": "test.ehps.ncsu.edu",
   "copyright_year": "{% now 'utc', '%Y' %}",
   "license": ["MIT", "Apache-2.0", "GPL-3.0"],
   "development_status": [
