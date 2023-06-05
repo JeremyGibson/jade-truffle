@@ -13,8 +13,8 @@ services:
       EMAIL_PORT: 1025
       SESSION_COOKIE_SECURE: "False"
     build:
-      context: .
-      dockerfile: ./Dockerfile
+      context: ..
+      dockerfile: ../Dockerfile
       target: deploy
     command: ["uwsgi", "--show-config"]
     links:

@@ -1,4 +1,4 @@
-FROM node:14.17-alpine as static_files
+FROM node:18-bullseye-slim as static_files
 WORKDIR /code
 ENV PATH /code/node_modules/.bin:$PATH
 COPY package.json package-lock.json webpack.config.js /code/
@@ -7,7 +7,7 @@ COPY . /code/
 RUN npm run build
 RUN npm run build:css
 
-FROM python:3.9-slim-bullseye as base
+FROM python:3.10.4-slim-bullseye as base
 
 # Install packages needed to run your application (not build deps):
 #   mime-support -- for mime types when serving static files
@@ -27,7 +27,7 @@ RUN set -ex \
     && apt-get update && apt-get install -y --no-install-recommends $RUN_DEPS \
     && curl https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor | tee /etc/apt/trusted.gpg.d/apt.postgresql.org.gpg >/dev/null \
     && sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ bullseye-pgdg main" > /etc/apt/sources.list.d/postgresql.list' \
-    && apt-get update && apt-get install -y --no-install-recommends postgresql-client-{{ cookiecutter.postgres_version }} \
+    && apt-get update && apt-get install -y --no-install-recommends postgresql-client-14 \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy in your requirements file
@@ -45,9 +45,9 @@ RUN set -ex \
     libpq-dev \
     " \
     && apt-get update && apt-get install -y --no-install-recommends $BUILD_DEPS \
+    && pip config --site set site.extra-index-url https://pypi.ehps.ncsu.edu/ \
     && pip install -U -q pip-tools \
     && pip-sync requirements/base/base.txt requirements/deploy/deploy.txt \
-    \
     && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false $BUILD_DEPS \
     && rm -rf /var/lib/apt/lists/*
 
@@ -56,7 +56,7 @@ RUN mkdir /code/
 WORKDIR /code/
 ADD . /code/
 
-COPY --from=static_files /code/{{ cookiecutter.project_app }}/static /code/{{ cookiecutter.project_app }}/static
+COPY --from=static_files /code/automation/static /code/automation/static
 
 FROM base AS deploy
 
@@ -68,13 +68,13 @@ RUN groupadd -r ${APP_USER} && useradd --no-log-init -r -g ${APP_USER} ${APP_USE
 EXPOSE 8000
 
 # Add any static environment variables needed by Django or your settings file here:
-ENV DJANGO_SETTINGS_MODULE={{ cookiecutter.project_app }}.settings.deploy
+ENV DJANGO_SETTINGS_MODULE=automation.settings.deploy
 
 # Call collectstatic (customize the following line with the minimal environment variables needed for manage.py to run):
 RUN DATABASE_URL='' ENVIRONMENT='' DJANGO_SECRET_KEY='dummy' DOMAIN='' python manage.py collectstatic --noinput -i *.scss --no-default-ignore
 
 # Tell uWSGI where to find your wsgi file (change this):
-ENV UWSGI_WSGI_FILE={{ cookiecutter.project_app }}/wsgi.py
+ENV UWSGI_WSGI_FILE=automation/wsgi.py
 
 # Base uWSGI configuration (you shouldn't need to change these):
 ENV UWSGI_HTTP=:8000 UWSGI_MASTER=1 UWSGI_HTTP_AUTO_CHUNKED=1 UWSGI_HTTP_KEEPALIVE=1 UWSGI_LAZY_APPS=1 UWSGI_WSGI_ENV_BEHAVIOR=holy UWSGI_IGNORE_SIGPIPE=true UWSGI_IGNORE_WRITE_ERRORS=true UWSGI_DISABLE_WRITE_EXCEPTION=true
@@ -89,7 +89,7 @@ ENV UWSGI_STATIC_MAP="/static/=/code/static/" UWSGI_STATIC_EXPIRES_URI="/static/
 USER ${APP_USER}:${APP_USER}
 
 # Uncomment after creating your docker-entrypoint.sh
-ENTRYPOINT ["/code/docker-entrypoint.sh"]
+ENTRYPOINT ["/code/docker/docker-entrypoint.sh"]
 
 # Start uWSGI
-CMD ["newrelic-admin", "run-program", "uwsgi", "--single-interpreter", "--enable-threads", "--show-config"]
+CMD ["uwsgi", "--single-interpreter", "--enable-threads", "--show-config"]

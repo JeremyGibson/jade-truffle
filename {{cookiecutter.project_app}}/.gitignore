@@ -1,6 +1,7 @@
 # Logs and local files
 .env
 .envrc
+.direnv/
 *.db
 *.dump
 *.pgdump
@@ -42,8 +43,6 @@ aws_ec2.yml
 # Linter Cache
 .mypy_cache/*
 
-# Sphinx build directory
-/docs/_build/*
 
 #Testing
 .coverage
