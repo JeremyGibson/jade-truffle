@@ -6,4 +6,9 @@ newrelic
 openshift
 kubernetes-validate
 uWSGI
+{% if cookiecutter.cache_backend == 'memcache' %}
 python-memcached
+{% elif cookiecutter.cache_backend == 'redis' %}
+redis
+hiredis
+{% endif %}

@@ -19,11 +19,14 @@ install_requirements:
 
 setup:
 	@echo 'Setting up the environment...'
+	direnv allow .
+	pip install --upgrade pip
+	make update_requirements
 	make install_requirements
 
 run-dev:
 	@echo 'Running local development'
-	docker-compose up -d --remove-orphans
+	docker compose up -d --remove-orphans
 	npm run dev &
 	python manage.py runserver
 

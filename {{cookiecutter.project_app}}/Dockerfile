@@ -1,4 +1,4 @@
-FROM node:14.17-alpine as static_files
+FROM node:18.18-alpine as static_files
 WORKDIR /code
 ENV PATH /code/node_modules/.bin:$PATH
 COPY package.json package-lock.json webpack.config.js /code/
@@ -7,7 +7,7 @@ COPY . /code/
 RUN npm run build
 RUN npm run build:css
 
-FROM python:3.9-slim-bullseye as base
+FROM python:{{cookiecutter.python_version}}-slim as base
 
 # Install packages needed to run your application (not build deps):
 #   mime-support -- for mime types when serving static files
@@ -26,7 +26,7 @@ RUN set -ex \
     && seq 1 8 | xargs -I{} mkdir -p /usr/share/man/man{} \
     && apt-get update && apt-get install -y --no-install-recommends $RUN_DEPS \
     && curl https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor | tee /etc/apt/trusted.gpg.d/apt.postgresql.org.gpg >/dev/null \
-    && sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ bullseye-pgdg main" > /etc/apt/sources.list.d/postgresql.list' \
+    && sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ bookworm-pgdg main" > /etc/apt/sources.list.d/postgresql.list' \
     && apt-get update && apt-get install -y --no-install-recommends postgresql-client-{{ cookiecutter.postgres_version }} \
     && rm -rf /var/lib/apt/lists/*
 
@@ -92,4 +92,4 @@ USER ${APP_USER}:${APP_USER}
 ENTRYPOINT ["/code/docker-entrypoint.sh"]
 
 # Start uWSGI
-CMD ["newrelic-admin", "run-program", "uwsgi", "--single-interpreter", "--enable-threads", "--show-config"]
+CMD ["uwsgi", "--single-interpreter", "--enable-threads", "--show-config"]

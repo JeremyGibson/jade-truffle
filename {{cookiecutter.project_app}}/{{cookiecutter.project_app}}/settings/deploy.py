@@ -39,10 +39,20 @@ SESSION_COOKIE_SECURE = os.getenv("SESSION_COOKIE_SECURE", "True") == "True"
 
 ### Performance optimizations
 
-CACHE_HOST = os.getenv("CACHE_HOST", "cache:11211")
+{% if cookiecutter.cache_backend == 'redis' %}
+CACHE_HOST = os.getenv("CACHE_HOST", "localhost")
+CACHE_BACKEND = "django.core.cache.backends.redis.RedisCache"
+{% elif cookiecutter.cache_backend == 'memcache' %}
+CACHE_HOST = os.getenv("CACHE_HOST", "localhost")
+CACHE_BACKEND = "django.core.cache.backends.memcached.PyMemcacheCache"
+{% elif cookiecutter.cache_backend == 'database' %}
+CACHE_BACKEND = "django.core.cache.backends.db.DatabaseCache"
+CACHE_HOST = "{{ cookiecutter.project_app }}_cache"
+{% endif %}
+
 CACHES = {
     "default": {
-        "BACKEND": "django.core.cache.backends.memcached.MemcachedCache",
+        "BACKEND": CACHE_BACKEND,
         "LOCATION": CACHE_HOST,
     }
 }
@@ -67,7 +77,7 @@ for backend in TEMPLATES:
             ]
 
 ### ADMINS and MANAGERS
-ADMINS = (("{{ cookiecutter.project_name }} Dev Team", "{{cookiecutter.project_app}}-team@caktusgroup.com"),)
+ADMINS = (("{{ cookiecutter.project_name }} Dev Team", "{{cookiecutter.project_app}}-team@crusosoft.com"),)
 
 ### 3rd-party appplications
 
