@@ -8,9 +8,8 @@ from .views import HomePageView
 
 {% if cookiecutter.project_type == "wagtail" -%}
 from wagtail.admin import urls as wagtailadmin_urls
-from wagtail.core import urls as wagtail_urls
+from wagtail import urls as wagtail_urls
 from wagtail.documents import urls as wagtaildocs_urls
-from apps.search import views as search_views
 {% endif %}
 
 urlpatterns = [
@@ -19,7 +18,6 @@ urlpatterns = [
 
 {% if cookiecutter.project_type == "wagtail" %}
 urlpatterns += [
-    path("search/", search_views.search, name="search"),
     path("cms/", include(wagtailadmin_urls)),
     path("documents/", include(wagtaildocs_urls)),
     path("", include(wagtail_urls)),

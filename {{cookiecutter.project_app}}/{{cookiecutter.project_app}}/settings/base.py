@@ -44,22 +44,19 @@ INSTALLED_APPS = [
 
 {% if cookiecutter.project_type == 'wagtail' %}
 INSTALLED_APPS += [
-    "apps.search",
-    "taggit",
-    "wagtail.contrib.forms",
-    "wagtail.contrib.redirects",
-    "wagtail.embeds",
-    "wagtail.sites",
-    "wagtail.users",
-    "wagtail.snippets",
-    "wagtail.documents",
-    "wagtail.images",
-    "wagtail.search",
-    "wagtail.admin",
-    "wagtail.core",
-    "modelcluster",
-    "wagtail.contrib.styleguide",
-    "wagtail.contrib.modeladmin",
+    'wagtail.contrib.forms',
+    'wagtail.contrib.redirects',
+    'wagtail.embeds',
+    'wagtail.sites',
+    'wagtail.users',
+    'wagtail.snippets',
+    'wagtail.documents',
+    'wagtail.images',
+    'wagtail.search',
+    'wagtail.admin',
+    'wagtail',
+    'modelcluster',
+    'taggit',
 ]
 
 {% if cookiecutter.project_type == 'wagtail' %}
@@ -124,7 +121,7 @@ WSGI_APPLICATION = "{{ cookiecutter.project_app }}.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.postgresql_psycopg2",
+        "ENGINE": "django.db.backends.postgresql",
         "NAME": "{{ cookiecutter.project_app }}",
         "USER": "",
         "PASSWORD": "",
